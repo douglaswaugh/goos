@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/Library/Java/jmock-2.5.1/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/smack_3_2_1/smack.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/smack_3_2_1/smackx-debug.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/smack_3_2_1/smackx.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/windowlicker/build/jars/tools.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/windowlicker/build/jars/windowlicker-core-DEV.jar" sourcepath="/Library/Java/windowlicker/src/core/main/com/objogate/wl"/>
+	<classpathentry kind="lib" path="/Library/Java/windowlicker/build/jars/windowlicker-swing-DEV.jar" sourcepath="/Library/Java/windowlicker/src/swing/main/com/objogate/wl/swing"/>
+	<classpathentry kind="lib" path="/Library/Java/jmock-2.5.1/jmock-junit4-2.5.1.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/hamcrest-1.2/hamcrest-core-1.2.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/hamcrest-1.2/hamcrest-library-1.2.jar"/>
+	<classpathentry kind="lib" path="/Library/Java/junit4.10/junit-dep-4.10.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
