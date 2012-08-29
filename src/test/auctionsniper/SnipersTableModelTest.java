@@ -17,6 +17,7 @@ import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
 
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
+import auctionsniper.ui.Column;
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
 

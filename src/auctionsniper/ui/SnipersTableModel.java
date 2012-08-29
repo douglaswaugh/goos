@@ -4,10 +4,10 @@ import javax.swing.table.AbstractTableModel;
 
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
-import test.auctionsniper.Column;
 
 public class SnipersTableModel extends AbstractTableModel {
 	private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, null);
+	private String state = Main.STATUS_JOINING;
 	private SniperSnapshot snapshot = STARTING_UP;
 	private String statusText = MainWindow.STATUS_JOINING;
 	private static String[] STATUS_TEXT = { 
@@ -30,7 +30,7 @@ public class SnipersTableModel extends AbstractTableModel {
 		case LAST_BID:
 			return snapshot.lastBid;
 		case SNIPER_STATE:
-			return statusText;
+			return state;
 		default:
 			throw new IllegalArgumentException("No column at " + columnIndex);
 		}
@@ -40,9 +40,9 @@ public class SnipersTableModel extends AbstractTableModel {
 		return STATUS_TEXT[state.ordinal()];
 	}
 	
-	public void sniperStatusChanged(SniperSnapshot newSnapshot, String newStatusText) {
+	public void sniperStatusChanged(SniperSnapshot newSnapshot) {
 		this.snapshot = newSnapshot;
-		this.statusText = newStatusText;
+		this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
 		fireTableRowsUpdated(0,0);
 	}
 }
