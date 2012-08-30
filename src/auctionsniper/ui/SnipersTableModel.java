@@ -8,13 +8,7 @@ import auctionsniper.SniperState;
 public class SnipersTableModel extends AbstractTableModel {
 	private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
 	private SniperSnapshot snapshot = STARTING_UP;
-	private String statusText = MainWindow.STATUS_JOINING;
-	private static String[] STATUS_TEXT = { 
-		MainWindow.STATUS_JOINING, 
-		MainWindow.STATUS_BIDDING, 
-		MainWindow.STATUS_WINNING,
-		MainWindow.STATUS_LOST,
-		MainWindow.STATUS_WON };
+	private static String[] STATUS_TEXT = { "Joining", "Bidding", "Winning", "Lost", "Won"};
 		
 	public int getColumnCount() { return Column.values().length; }
 	
