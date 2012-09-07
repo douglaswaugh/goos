@@ -10,12 +10,15 @@ import javax.swing.JTable;
 import auctionsniper.SniperSnapshot;
 
 public class MainWindow extends JFrame {
-	private final SnipersTableModel snipers = new SnipersTableModel();
+	public static final String APPLICATION_TITLE = "Auction Sniper";
+
+	private final SnipersTableModel snipers;
 	
 	private String SNIPERS_TABLE_NAME = "Snipers_Table";
 	
-	public MainWindow(){
+	public MainWindow(SnipersTableModel snipers){
 		super("Auction Sniper");
+		this.snipers = snipers;
 		setName(Main.MAIN_WINDOW_NAME);
 		fillContentPane(makeSnipersTable());
 		pack();
@@ -37,6 +40,6 @@ public class MainWindow extends JFrame {
 	}
 
 	public void sniperStatusChanged(SniperSnapshot sniperSnapshot) {		
-		snipers.sniperStatusChanged(sniperSnapshot);
+		snipers.sniperStateChanged(sniperSnapshot);
 	}	
 }

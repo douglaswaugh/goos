@@ -18,6 +18,7 @@ import auctionsniper.SniperSnapshot;
 
 
 public class Main {
+	private final SnipersTableModel snipers = new SnipersTableModel();
 	private MainWindow ui;
 	private Chat notToBeGCd;
 	private static final int ARG_HOSTNAME = 0;
@@ -49,7 +50,7 @@ public class Main {
 	private void startUserInterface() throws InterruptedException, InvocationTargetException {
 		SwingUtilities.invokeAndWait(new Runnable(){
 			public void run() {
-				ui = new MainWindow();
+				ui = new MainWindow(snipers);
 			}
 		});		
 	}
@@ -67,7 +68,10 @@ public class Main {
 		chat.addMessageListener(
 				new AuctionMessageTranslator(
 						connection.getUser(), 
-						new AuctionSniper(auction, new SniperStateDisplayer(), itemId)));
+						new AuctionSniper(
+								auction, 
+								new SwingThreadSniperListener(snipers), 
+								itemId)));
 		
 		auction.join();
 	}
@@ -92,13 +96,19 @@ public class Main {
 		return connection;
 	}
 
-	public class SniperStateDisplayer implements SniperListener{
+	public class SwingThreadSniperListener implements SniperListener{
 
+		private final SniperListener listener;
+		
+		public SwingThreadSniperListener(SniperListener listener) {
+			this.listener = listener;
+		}
+		
 		@Override
 		public void sniperStateChanged(final SniperSnapshot state) {
 			SwingUtilities.invokeLater(new Runnable(){
 				public void run(){
-					ui.sniperStatusChanged(state);
+					listener.sniperStateChanged(state);
 				}
 			});
 		}
