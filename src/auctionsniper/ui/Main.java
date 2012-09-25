@@ -15,6 +15,7 @@ import auctionsniper.AuctionSniper;
 import auctionsniper.Dummy;
 import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperState;
 
 
 public class Main {
@@ -38,12 +39,19 @@ public class Main {
 	public static final String STATUS_WON = "Won";
 	public static final String STATUS_WINNING = "Winning";
 	
-	public Main() throws Exception{
+	public Main() throws Exception {
+		System.out.println("Main constructor");
+		startUserInterface();
+	}
+
+	public Main(String itemId) throws Exception {
+		snipers.sniperStateChanged(new SniperSnapshot(itemId, 0, 0, SniperState.JOINING));
 		startUserInterface();
 	}
 
 	public static void main(String...args) throws Exception {
-		Main main = new Main();
+		System.out.println("main method");
+		Main main = new Main(args[ARG_ITEM_ID]);
 		main.joinAuction(connectTo(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]), args[ARG_ITEM_ID]);
 	}	
 	
