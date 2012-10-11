@@ -10,6 +10,7 @@ import org.jivesoftware.smack.packet.Message;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.hasProperty;
 
 public class SingleMessageListener implements MessageListener {
 	private static final TimeUnit SECONDS = TimeUnit.SECONDS;
@@ -22,8 +23,7 @@ public class SingleMessageListener implements MessageListener {
 	
 	public void receivesAMessage(Matcher<? super String> messageMatcher) throws InterruptedException{
 		final Message message = messages.poll(5, SECONDS);
-		assertThat("Message", message, is(notNullValue()));
-		assertThat(message.getBody(), messageMatcher);
+		assertThat(message, hasProperty("body", messageMatcher));
 	}
 	
 	public void receivesAMessage() throws InterruptedException{

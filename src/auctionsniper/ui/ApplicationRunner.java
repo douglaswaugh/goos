@@ -27,11 +27,9 @@ public class ApplicationRunner {
 		driver.hasTitle(MainWindow.APPLICATION_TITLE);
 		driver.hasColumnTitles();
 		for (FakeAuctionServer auction : auctions) {
-			driver.showSniperStatus(auction.getItemId(), 0, 0, SnipersTableModel.textFor(JOINING));
-			System.out.println("check ui shows sniper status");
-			//driver.showSniperStatus(SnipersTableModel.textFor(JOINING));
+			//driver.showSniperStatus(auction.getItemId(), 0, 0, SnipersTableModel.textFor(JOINING));
+			driver.showSniperStatus(SnipersTableModel.textFor(JOINING));
 		}
-		
 	}
 
 	protected static String[] arguments(FakeAuctionServer[] auctions) {
