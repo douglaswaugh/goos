@@ -10,6 +10,9 @@ import org.junit.runner.RunWith;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
+
+import com.objogate.exception.Defect;
+
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.hamcrest.Matchers.equalTo;
@@ -73,6 +76,48 @@ public class SnipersTableModelTest {
 		
 		assertEquals(1, model.getRowCount());
 		assertRowMatchesSnapshot(0, joining);
+	}
+	
+	@Test
+	public void holdsSniperInAdditionOrder() {
+		context.checking(new Expectations() {{
+			ignoring(listener);
+		}});
+		
+		model.addSniper(SniperSnapshot.joining("item 0"));
+		model.addSniper(SniperSnapshot.joining("item 1"));
+		
+		assertEquals("item 0", cellValue(0, Column.ITEM_IDENTIFIER));
+		assertEquals("item 1", cellValue(1, Column.ITEM_IDENTIFIER));
+	}
+	
+	@Test
+	public void updatesCorrectRowForSniper() {		
+		context.checking(new Expectations(){{
+			ignoring(listener);
+		}});
+		
+		SniperSnapshot joining = SniperSnapshot.joining("item 0");
+		model.addSniper(SniperSnapshot.joining("item 1"));
+		model.addSniper(joining);
+		SniperSnapshot bidding = joining.bidding(555, 666);
+		model.sniperStateChanged(bidding);
+		
+		assertRowMatchesSnapshot(1, bidding);
+	}
+	
+	@Test (expected=Defect.class)
+	public void throwsDefectIfNoExistingSniperForAnUpdate() {
+		context.checking(new Expectations() {{
+			ignoring(listener);
+		}});
+		
+		model.addSniper(SniperSnapshot.joining("item 0"));
+		model.sniperStateChanged(SniperSnapshot.joining("item 1"));
+	}
+	
+	private String cellValue(int row, Column column) {
+		return (String)model.getValueAt(row, column.ordinal());
 	}
 
 	private void assertRowMatchesSnapshot(int rowIndex, SniperSnapshot snapshot) {

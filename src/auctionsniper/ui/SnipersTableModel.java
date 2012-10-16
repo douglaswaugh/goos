@@ -38,7 +38,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 	
 	private int rowMatching(SniperSnapshot updatedSnapshot) {
 		for (SniperSnapshot snapshot : snapshots){
-			if (snapshot.isSameItemAs(updatedSnapshot)) {
+			if (snapshot.isForSameItemAs(updatedSnapshot)) {
 				return snapshots.indexOf(snapshot);				
 			}
 		}	
