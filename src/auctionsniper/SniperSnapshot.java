@@ -1,7 +1,5 @@
 package auctionsniper;
 
-import com.objogate.exception.Defect;
-
 public class SniperSnapshot {
 	public final String itemId;
 	public final int lastPrice;
@@ -69,5 +67,9 @@ public class SniperSnapshot {
 		if (state != other.state)
 			return false;
 		return true;
+	}
+
+	public boolean isSameItemAs(SniperSnapshot other) {
+		return this.itemId == other.itemId;
 	}
 }
