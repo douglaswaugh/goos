@@ -12,42 +12,39 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
+import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.xmpp.AuctionMessageTranslator;
 import auctionsniper.xmpp.XMPPAuction;
+import auctionsniper.xmpp.XMPPAuctionHouse;
 
 
 public class Main {
 	private final SnipersTableModel snipers = new SnipersTableModel();
 	private MainWindow ui;
-	private List<XMPPAuction> notToBeGCd = new ArrayList<XMPPAuction>();
+	private List<Auction> notToBeGCd = new ArrayList<Auction>();
 	private static final int ARG_HOSTNAME = 0;
 	private static final int ARG_USERNAME = 1;
 	private static final int ARG_PASSWORD = 2;
-	private static final int ARG_ITEM_ID = 3;
-	private static final String AUCTION_RESOURCE = "auction";
-	public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
-	public static final String JOIN_COMMAND_FORMAT = "SOL Version 1.1; Command: Join";
 	public static final String STATUS_LOST = "Lost"; 
 	public static final String STATUS_BIDDING = "Bidding";
 	public static final String STATUS_JOINING = "Joining";
-	public static final String SNIPER_STATUS_NAME = "sniper status";
-	public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
 	public static final String STATUS_WON = "Won";
 	public static final String STATUS_WINNING = "Winning";
-	
+	public static final String SNIPER_STATUS_NAME = "sniper status";
+	public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";	
 	public Main() throws Exception {
 		startUserInterface();
 	}
 
 	public static void main(String...args) throws Exception {
 		Main main = new Main();
-		XMPPConnection connection = connection(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
-		main.disconnectWhenUICloses(connection);
-		main.addUserRequestListenerFor(connection);
+		XMPPAuctionHouse auctionHouse = XMPPAuctionHouse.connect(args[ARG_HOSTNAME], args[ARG_USERNAME], args[ARG_PASSWORD]);
+		main.disconnectWhenUICloses(auctionHouse);
+		main.addUserRequestListenerFor(auctionHouse);
 	}
 
 	private void startUserInterface() throws InterruptedException, InvocationTargetException {
@@ -58,11 +55,11 @@ public class Main {
 		});		
 	}
 
-	private void addUserRequestListenerFor(final XMPPConnection connection) {
+	private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse) {
 		ui.addUserRequestListener(new UserRequestListener() {
 			public void joinAuction(String itemId) {
 				snipers.addSniper(SniperSnapshot.joining(itemId));				
-				XMPPAuction auction = new XMPPAuction(connection, itemId);
+				Auction auction = auctionHouse.auctionFor(itemId);
 				notToBeGCd.add(auction);	
 				auction.addAuctionEventListener(new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers)));
 				auction.join();
@@ -70,20 +67,12 @@ public class Main {
 		});		
 	}
 
-	private void disconnectWhenUICloses(final XMPPConnection connection) {
+	private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
 		ui.addWindowListener(new WindowAdapter() {
 			@Override public void windowClosed(WindowEvent e){
-				connection.disconnect();
+				auctionHouse.disconnect();
 			}
 		});		
-	}
-
-	private static XMPPConnection connection(String hostname, String username,
-			String password) throws XMPPException {
-		XMPPConnection connection = new XMPPConnection(hostname);
-		connection.connect();
-		connection.login(username, password, AUCTION_RESOURCE);
-		return connection;
 	}
 
 	public class SwingThreadSniperListener implements SniperListener{

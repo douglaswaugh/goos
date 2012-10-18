@@ -15,26 +15,27 @@ import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.ui.ApplicationRunner;
 import auctionsniper.xmpp.XMPPAuction;
+import auctionsniper.xmpp.XMPPAuctionHouse;
 
-public class XMPPAuctionTest {
+public class XMPPAuctionHouseTest {
 	private static final String XMPP_HOSTNAME = "localhost";
 	private static final String SNIPER_ID = "sniper";
 	private static final String SNIPER_PASSWORD = "sniper";
 	private static final String AUCTION_RESOURCE = "auction";
-	private XMPPConnection connection;
+	private XMPPAuctionHouse auctionHouse;
 	private static final FakeAuctionServer auctionServer = new FakeAuctionServer("item-54321");
 
 	@Before
 	public void startUp() throws XMPPException {		
-		connection = connection(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD);		
+		auctionHouse = XMPPAuctionHouse.connect(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD);
 		auctionServer.startSellingItem();
 	}
 	
 	@Test
 	public void receivesEventsFromAuctionServerAfterJoining() throws Exception{
-		CountDownLatch auctionWasClosed = new CountDownLatch(1);
-		
-		Auction auction = new XMPPAuction(connection, auctionServer.getItemId());
+		CountDownLatch auctionWasClosed = new CountDownLatch(1);		
+				
+		Auction auction = auctionHouse.auctionFor(auctionServer.getItemId());
 		auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 		
 		auction.join();

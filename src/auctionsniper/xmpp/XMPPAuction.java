@@ -12,9 +12,10 @@ import auctionsniper.ui.Main;
 public class XMPPAuction implements Auction {
 	private final Chat chat;	
 	private final Announcer<AuctionEventListener> auctionEventListeners = Announcer.to(AuctionEventListener.class);
-	private static final String AUCTION_RESOURCE = "auction";
 	private static final String ITEM_ID_AS_LOGIN = "auction-%s";
-	private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;	
+	private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + XMPPAuctionHouse.AUCTION_RESOURCE;	
+	public static final String BID_COMMAND_FORMAT = "SOLVersion: 1.1; Command: BID; Price: %d;";
+	public static final String JOIN_COMMAND_FORMAT = "SOL Version 1.1; Command: Join";
 	
 	public XMPPAuction(XMPPConnection connection, String itemId) {
 		this.chat = connection.getChatManager().createChat(
@@ -24,11 +25,11 @@ public class XMPPAuction implements Auction {
 	}
 	
 	public void bid(int amount) {
-		sendMessage(String.format(Main.BID_COMMAND_FORMAT, amount));
+		sendMessage(String.format(BID_COMMAND_FORMAT, amount));
 	}
 	
 	public void join() {
-		sendMessage(Main.JOIN_COMMAND_FORMAT);
+		sendMessage(JOIN_COMMAND_FORMAT);
 	}
 	
 	public Announcer<AuctionEventListener> getAuctionEventListeners() {
