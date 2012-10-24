@@ -8,17 +8,8 @@ import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-
 import auctionsniper.Auction;
-import auctionsniper.AuctionEventListener;
-import auctionsniper.AuctionSniper;
-import auctionsniper.SniperListener;
-import auctionsniper.SniperSnapshot;
-import auctionsniper.xmpp.AuctionMessageTranslator;
-import auctionsniper.xmpp.XMPPAuction;
+import auctionsniper.SniperLauncher;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
 
@@ -31,10 +22,10 @@ public class Main {
 	private static final int ARG_PASSWORD = 2;
 	public static final String STATUS_LOST = "Lost"; 
 	public static final String STATUS_BIDDING = "Bidding";
-	public static final String STATUS_JOINING = "Joining";
+//	public static final String STATUS_JOINING = "Joining";
 	public static final String STATUS_WON = "Won";
 	public static final String STATUS_WINNING = "Winning";
-	public static final String SNIPER_STATUS_NAME = "sniper status";
+//	public static final String SNIPER_STATUS_NAME = "sniper status";
 	public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";	
 	public Main() throws Exception {
 		startUserInterface();
@@ -56,15 +47,7 @@ public class Main {
 	}
 
 	private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse) {
-		ui.addUserRequestListener(new UserRequestListener() {
-			public void joinAuction(String itemId) {
-				snipers.addSniper(SniperSnapshot.joining(itemId));				
-				Auction auction = auctionHouse.auctionFor(itemId);
-				notToBeGCd.add(auction);	
-				auction.addAuctionEventListener(new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers)));
-				auction.join();
-			}			
-		});		
+		ui.addUserRequestListener(new SniperLauncher(auctionHouse, snipers));
 	}
 
 	private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
@@ -73,24 +56,6 @@ public class Main {
 				auctionHouse.disconnect();
 			}
 		});		
-	}
-
-	public class SwingThreadSniperListener implements SniperListener{
-
-		private final SniperListener listener;
-		
-		public SwingThreadSniperListener(SniperListener listener) {
-			this.listener = listener;
-		}
-		
-		@Override
-		public void sniperStateChanged(final SniperSnapshot state) {
-			SwingUtilities.invokeLater(new Runnable(){
-				public void run(){
-					listener.sniperStateChanged(state);
-				}
-			});
-		}
 	}
 }
  

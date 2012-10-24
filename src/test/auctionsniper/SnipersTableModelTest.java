@@ -1,34 +1,33 @@
 package test.auctionsniper;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import auctionsniper.AuctionSniper;
+import auctionsniper.SniperSnapshot;
+import auctionsniper.ui.Column;
+import auctionsniper.ui.SnipersTableModel;
 
 import com.objogate.exception.Defect;
-
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
-
-import auctionsniper.SniperSnapshot;
-import auctionsniper.SniperState;
-import auctionsniper.ui.Column;
-import auctionsniper.ui.MainWindow;
-import auctionsniper.ui.SnipersTableModel;
 
 @RunWith(JMock.class)
 public class SnipersTableModelTest {
 	private final Mockery context = new Mockery();
-	private TableModelListener listener = context.mock(TableModelListener.class);
+	private final TableModelListener listener = context.mock(TableModelListener.class);
 	private final SnipersTableModel model = new SnipersTableModel();	
 	
 	@Before 
@@ -43,8 +42,8 @@ public class SnipersTableModelTest {
 	
 	@Test
 	public void setsSniperValuesInColumns(){
-		SniperSnapshot joining = SniperSnapshot.joining("item id");
-		SniperSnapshot bidding = joining.bidding(555, 666);
+		AuctionSniper joining = new AuctionSniper("item id", null);
+		SniperSnapshot bidding = joining.getSnapshot().bidding(555, 666);
 		context.checking(new Expectations(){{
 			allowing(listener).tableChanged(with(anyInsertionEvent()));
 			one(listener).tableChanged(with(aChangeInRow(0)));
@@ -65,7 +64,7 @@ public class SnipersTableModelTest {
 	
 	@Test
 	public void notifiesListenersWhenAddingASniper() {
-		SniperSnapshot joining  = SniperSnapshot.joining("item123");
+		AuctionSniper joining = new AuctionSniper("item123", null);
 		context.checking(new Expectations() { {
 			oneOf(listener).tableChanged(with(anInsertionAtRow(0)));
 		}});	
@@ -75,32 +74,35 @@ public class SnipersTableModelTest {
 		model.addSniper(joining);
 		
 		assertEquals(1, model.getRowCount());
-		assertRowMatchesSnapshot(0, joining);
+		assertRowMatchesSnapshot(0, joining.getSnapshot());
 	}
 	
 	@Test
 	public void holdsSniperInAdditionOrder() {
+		AuctionSniper joining = new AuctionSniper("item 0", null);
+		AuctionSniper joining2 = new AuctionSniper("item 1", null);
 		context.checking(new Expectations() {{
 			ignoring(listener);
 		}});
 		
-		model.addSniper(SniperSnapshot.joining("item 0"));
-		model.addSniper(SniperSnapshot.joining("item 1"));
+		model.addSniper(joining);
+		model.addSniper(joining2);
 		
 		assertEquals("item 0", cellValue(0, Column.ITEM_IDENTIFIER));
 		assertEquals("item 1", cellValue(1, Column.ITEM_IDENTIFIER));
 	}
 	
 	@Test
-	public void updatesCorrectRowForSniper() {		
+	public void updatesCorrectRowForSniper() {	
+		AuctionSniper joining = new AuctionSniper("item 0", null);
+		AuctionSniper joining2 = new AuctionSniper("item 1", null);
 		context.checking(new Expectations(){{
 			ignoring(listener);
 		}});
 		
-		SniperSnapshot joining = SniperSnapshot.joining("item 0");
-		model.addSniper(SniperSnapshot.joining("item 1"));
 		model.addSniper(joining);
-		SniperSnapshot bidding = joining.bidding(555, 666);
+		model.addSniper(joining2);
+		SniperSnapshot bidding = joining2.getSnapshot().bidding(555, 666);
 		model.sniperStateChanged(bidding);
 		
 		assertRowMatchesSnapshot(1, bidding);
@@ -108,12 +110,14 @@ public class SnipersTableModelTest {
 	
 	@Test (expected=Defect.class)
 	public void throwsDefectIfNoExistingSniperForAnUpdate() {
+		AuctionSniper joining = new AuctionSniper("item 0", null);
+		AuctionSniper joining2 = new AuctionSniper("item 1", null);
 		context.checking(new Expectations() {{
 			ignoring(listener);
 		}});
 		
-		model.addSniper(SniperSnapshot.joining("item 0"));
-		model.sniperStateChanged(SniperSnapshot.joining("item 1"));
+		model.addSniper(joining);
+		model.sniperStateChanged(joining2.getSnapshot());
 	}
 	
 	private String cellValue(int row, Column column) {

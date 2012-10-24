@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.equalTo;
 import org.hamcrest.Matcher;
 
 import auctionsniper.ui.Main;
+import auctionsniper.xmpp.XMPPAuction;
 import static org.junit.Assert.assertThat;
 
 public class FakeAuctionServer {
@@ -53,12 +54,12 @@ public class FakeAuctionServer {
 	}
 
 	public void hasReceivedJoinRequestFromSniper(String sniperId) throws InterruptedException {
-		receivesAMessageMatching(sniperId, equalTo(Main.JOIN_COMMAND_FORMAT));
+		receivesAMessageMatching(sniperId, equalTo(XMPPAuction.JOIN_COMMAND_FORMAT));
 	}
 
 	public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
 		receivesAMessageMatching(sniperId, equalTo(String.format(
-						Main.BID_COMMAND_FORMAT, bid)));
+				XMPPAuction.BID_COMMAND_FORMAT, bid)));
 	}
 
 	public void stop() {

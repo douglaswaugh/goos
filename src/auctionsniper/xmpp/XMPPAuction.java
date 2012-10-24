@@ -7,7 +7,6 @@ import org.jivesoftware.smack.XMPPException;
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.ui.Announcer;
-import auctionsniper.ui.Main;
 
 public class XMPPAuction implements Auction {
 	private final Chat chat;	
@@ -32,9 +31,9 @@ public class XMPPAuction implements Auction {
 		sendMessage(JOIN_COMMAND_FORMAT);
 	}
 	
-	public Announcer<AuctionEventListener> getAuctionEventListeners() {
-		return auctionEventListeners;
-	}
+//	public Announcer<AuctionEventListener> getAuctionEventListeners() {
+//		return auctionEventListeners;
+//	}
 
 	private void sendMessage(final String message) {
 		try {			

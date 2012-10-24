@@ -8,12 +8,16 @@ import javax.swing.table.AbstractTableModel;
 
 import com.objogate.exception.Defect;
 
+import auctionsniper.AuctionSniper;
+import auctionsniper.SniperCollector;
 import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
+import auctionsniper.SwingThreadSniperListener;
 
-public class SnipersTableModel extends AbstractTableModel implements SniperListener {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener, SniperCollector {
 	private List<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
+	private final ArrayList<AuctionSniper> notToBeGCd = new ArrayList<AuctionSniper>();
 	private static String[] STATUS_TEXT = { "Joining", "Bidding", "Winning", "Lost", "Won"};
 		
 	public int getColumnCount() { return Column.values().length; }
@@ -29,11 +33,29 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 	}
 
 	@Override
+	public String getColumnName(int column){
+		return Column.at(column).name;
+	}
+
+	@Override
 	public void sniperStateChanged(SniperSnapshot updatedSnapshot) {
 		int row = rowMatching(updatedSnapshot);
 		
 		snapshots.set(row, updatedSnapshot);
 		fireTableRowsUpdated(row,row);	
+	}
+
+	private void addSniperSnapshot(SniperSnapshot snapshot) {
+		this.snapshots.add(snapshot);
+		int row = snapshots.size() - 1;
+		fireTableRowsInserted(row, row);
+	}
+
+	@Override
+	public void addSniper(AuctionSniper sniper) {
+		notToBeGCd.add(sniper);
+		addSniperSnapshot(sniper.getSnapshot());
+		sniper.addSniperListener(new SwingThreadSniperListener(this));
 	}
 	
 	private int rowMatching(SniperSnapshot updatedSnapshot) {
@@ -44,15 +66,4 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 		}	
 		throw new Defect("Cannot find match for " + updatedSnapshot);
 	}
-
-	@Override
-	public String getColumnName(int column){
-		return Column.at(column).name;
-	}
-
-	public void addSniper(SniperSnapshot joining) {
-		this.snapshots.add(joining);
-		fireTableRowsInserted(0, 0);
-	}
-	
-}
+}	
