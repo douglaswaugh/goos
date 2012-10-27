@@ -17,15 +17,10 @@ import auctionsniper.SniperSnapshot;
 
 public class MainWindow extends JFrame {
 	public static final String APPLICATION_TITLE = "Auction Sniper";
-
 	public static final String NEW_ITEM_ID_NAME = "item id";
-
 	public static final String JOIN_BUTTON_NAME = "bid";
-
 	private final SnipersTableModel snipers;
-	
 	private String SNIPERS_TABLE_NAME = "Snipers_Table";
-
 	private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 	
 	public MainWindow(SnipersTableModel snipers){
@@ -40,6 +35,10 @@ public class MainWindow extends JFrame {
 
 	public void sniperStatusChanged(SniperSnapshot sniperSnapshot) {		
 		snipers.sniperStateChanged(sniperSnapshot);
+	}
+
+	public void addUserRequestListener(UserRequestListener userRequestListener) {
+		userRequests.addListener(userRequestListener);
 	}
 	
 	private JPanel makeControls() {
@@ -73,9 +72,5 @@ public class MainWindow extends JFrame {
 		final JTable snipersTable = new JTable(snipers);
 		snipersTable.setName(SNIPERS_TABLE_NAME );
 		return snipersTable;
-	}
-
-	public void addUserRequestListener(UserRequestListener userRequestListener) {
-		userRequests.addListener(userRequestListener);
 	}
 }

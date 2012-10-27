@@ -45,17 +45,17 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 		fireTableRowsUpdated(row,row);	
 	}
 
-	private void addSniperSnapshot(SniperSnapshot snapshot) {
-		this.snapshots.add(snapshot);
-		int row = snapshots.size() - 1;
-		fireTableRowsInserted(row, row);
-	}
-
 	@Override
 	public void addSniper(AuctionSniper sniper) {
 		notToBeGCd.add(sniper);
 		addSniperSnapshot(sniper.getSnapshot());
 		sniper.addSniperListener(new SwingThreadSniperListener(this));
+	}
+
+	private void addSniperSnapshot(SniperSnapshot snapshot) {
+		this.snapshots.add(snapshot);
+		int row = snapshots.size() - 1;
+		fireTableRowsInserted(row, row);
 	}
 	
 	private int rowMatching(SniperSnapshot updatedSnapshot) {

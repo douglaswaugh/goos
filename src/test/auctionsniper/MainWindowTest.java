@@ -1,5 +1,6 @@
 package test.auctionsniper;
 
+import org.junit.After;
 import org.junit.Test;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
@@ -26,5 +27,12 @@ public class MainWindowTest {
 		
 		driver.startBiddingFor("an item-id");
 		driver.check(buttonProbe);
+	}
+	
+	@After
+	public void disposeOfDriver(){
+		if (driver != null) {
+			driver.dispose();
+		}			
 	}
 }
