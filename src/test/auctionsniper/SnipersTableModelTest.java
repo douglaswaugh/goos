@@ -18,9 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import auctionsniper.AuctionSniper;
+import auctionsniper.SniperPortfolio;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.ui.Column;
-import auctionsniper.ui.SniperPortfolio;
 import auctionsniper.ui.SnipersTableModel;
 
 import com.objogate.exception.Defect;

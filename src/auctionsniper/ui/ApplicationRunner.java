@@ -1,6 +1,7 @@
 package auctionsniper.ui;
 
 import auction.FakeAuctionServer;
+import auctionsniper.Main;
 import auctionsniper.SniperState;
 
 public class ApplicationRunner {

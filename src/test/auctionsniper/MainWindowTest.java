@@ -5,11 +5,11 @@ import org.junit.Test;
 
 import com.objogate.wl.swing.probe.ValueMatcherProbe;
 
+import auctionsniper.SniperPortfolio;
+import auctionsniper.UserRequestListener;
 import auctionsniper.ui.AuctionSniperDriver;
 import auctionsniper.ui.MainWindow;
-import auctionsniper.ui.SniperPortfolio;
 import auctionsniper.ui.SnipersTableModel;
-import auctionsniper.ui.UserRequestListener;
 import static org.hamcrest.Matchers.*;
 
 public class MainWindowTest {

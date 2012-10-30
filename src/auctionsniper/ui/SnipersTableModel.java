@@ -9,11 +9,11 @@ import javax.swing.table.AbstractTableModel;
 import com.objogate.exception.Defect;
 
 import auctionsniper.AuctionSniper;
+import auctionsniper.PortfolioListener;
 import auctionsniper.SniperCollector;
 import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
-import auctionsniper.SwingThreadSniperListener;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
 	private List<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();

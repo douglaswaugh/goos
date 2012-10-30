@@ -6,7 +6,7 @@ import org.jivesoftware.smack.XMPPException;
 import static org.hamcrest.Matchers.equalTo;
 import org.hamcrest.Matcher;
 
-import auctionsniper.ui.Main;
+import auctionsniper.Main;
 import auctionsniper.xmpp.XMPPAuction;
 import static org.junit.Assert.assertThat;
 

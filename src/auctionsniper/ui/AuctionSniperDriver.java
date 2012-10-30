@@ -5,6 +5,8 @@ import javax.swing.table.JTableHeader;
 
 import org.hamcrest.Matcher;
 import static org.hamcrest.Matchers.equalTo;
+import auctionsniper.Main;
+
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.JButtonDriver;
 import com.objogate.wl.swing.driver.JFrameDriver;

@@ -13,7 +13,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
+import auctionsniper.Main;
+import auctionsniper.SniperPortfolio;
 import auctionsniper.SniperSnapshot;
+import auctionsniper.UserRequestListener;
 
 public class MainWindow extends JFrame {
 	public static final String APPLICATION_TITLE = "Auction Sniper";
