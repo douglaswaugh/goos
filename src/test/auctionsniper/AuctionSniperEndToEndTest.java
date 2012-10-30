@@ -3,8 +3,6 @@ package test.auctionsniper;
 import org.junit.After;
 import org.junit.Test;
 
-import auction.FakeAuctionServer;
-import auctionsniper.ui.ApplicationRunner;
 
 public class AuctionSniperEndToEndTest {
 	private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");

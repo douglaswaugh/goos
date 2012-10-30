@@ -7,7 +7,6 @@ import com.objogate.wl.swing.probe.ValueMatcherProbe;
 
 import auctionsniper.SniperPortfolio;
 import auctionsniper.UserRequestListener;
-import auctionsniper.ui.AuctionSniperDriver;
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
 import static org.hamcrest.Matchers.*;

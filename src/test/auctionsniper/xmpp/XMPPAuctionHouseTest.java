@@ -13,11 +13,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import auction.FakeAuctionServer;
+import test.auctionsniper.ApplicationRunner;
+import test.auctionsniper.FakeAuctionServer;
+
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
 import auctionsniper.AuctionHouse;
-import auctionsniper.ui.ApplicationRunner;
 import auctionsniper.xmpp.XMPPAuction;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
