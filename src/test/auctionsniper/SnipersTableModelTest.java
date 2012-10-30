@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.ui.Column;
+import auctionsniper.ui.SniperPortfolio;
 import auctionsniper.ui.SnipersTableModel;
 
 import com.objogate.exception.Defect;
@@ -28,7 +29,7 @@ import com.objogate.exception.Defect;
 public class SnipersTableModelTest {
 	private final Mockery context = new Mockery();
 	private final TableModelListener listener = context.mock(TableModelListener.class);
-	private final SnipersTableModel model = new SnipersTableModel();	
+	private final SnipersTableModel model = new SnipersTableModel();
 	
 	@Before 
 	public void attachModelListener() {
@@ -49,7 +50,7 @@ public class SnipersTableModelTest {
 			one(listener).tableChanged(with(aChangeInRow(0)));
 		}});		
 		
-		model.addSniper(joining);
+		model.sniperAdded(joining);
 		model.sniperStateChanged(bidding);
 		
 		assertRowMatchesSnapshot(0, bidding);
@@ -71,7 +72,7 @@ public class SnipersTableModelTest {
 		
 		assertEquals(0, model.getRowCount());
 		
-		model.addSniper(joining);
+		model.sniperAdded(joining);
 		
 		assertEquals(1, model.getRowCount());
 		assertRowMatchesSnapshot(0, joining.getSnapshot());
@@ -85,8 +86,8 @@ public class SnipersTableModelTest {
 			ignoring(listener);
 		}});
 		
-		model.addSniper(joining);
-		model.addSniper(joining2);
+		model.sniperAdded(joining);
+		model.sniperAdded(joining2);
 		
 		assertEquals("item 0", cellValue(0, Column.ITEM_IDENTIFIER));
 		assertEquals("item 1", cellValue(1, Column.ITEM_IDENTIFIER));
@@ -100,8 +101,8 @@ public class SnipersTableModelTest {
 			ignoring(listener);
 		}});
 		
-		model.addSniper(joining);
-		model.addSniper(joining2);
+		model.sniperAdded(joining);
+		model.sniperAdded(joining2);
 		SniperSnapshot bidding = joining2.getSnapshot().bidding(555, 666);
 		model.sniperStateChanged(bidding);
 		
@@ -116,7 +117,7 @@ public class SnipersTableModelTest {
 			ignoring(listener);
 		}});
 		
-		model.addSniper(joining);
+		model.sniperAdded(joining);
 		model.sniperStateChanged(joining2.getSnapshot());
 	}
 	

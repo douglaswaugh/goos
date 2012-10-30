@@ -3,18 +3,15 @@ package auctionsniper.ui;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.SwingUtilities;
 
-import auctionsniper.Auction;
 import auctionsniper.SniperLauncher;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
 
 public class Main {
-	private final SnipersTableModel snipers = new SnipersTableModel();
+	private final SniperPortfolio portfolio = new SniperPortfolio();
 	private MainWindow ui;
 	private static final int ARG_HOSTNAME = 0;
 	private static final int ARG_USERNAME = 1;
@@ -38,13 +35,13 @@ public class Main {
 	private void startUserInterface() throws InterruptedException, InvocationTargetException {
 		SwingUtilities.invokeAndWait(new Runnable(){
 			public void run() {
-				ui = new MainWindow(snipers);
+				ui = new MainWindow(portfolio);
 			}
 		});		
 	}
 
 	private void addUserRequestListenerFor(final XMPPAuctionHouse auctionHouse) {
-		ui.addUserRequestListener(new SniperLauncher(auctionHouse, snipers));
+		ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
 	}
 
 	private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
