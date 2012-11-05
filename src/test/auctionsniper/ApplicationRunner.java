@@ -3,7 +3,7 @@ package test.auctionsniper;
 import auctionsniper.Main;
 import auctionsniper.SniperState;
 import auctionsniper.ui.MainWindow;
-import auctionsniper.ui.SnipersTableModel;
+import static auctionsniper.ui.SnipersTableModel.textFor;
 
 public class ApplicationRunner {
 	public static final String XMPP_HOSTNAME = "localhost";
@@ -13,13 +13,20 @@ public class ApplicationRunner {
 	private static final SniperState JOINING = SniperState.JOINING;
 	private AuctionSniperDriver driver;
 	
-	public void startBiddingIn(final FakeAuctionServer... auctions){
+	public void startBiddingIn(final FakeAuctionServer... auctions) {
 		startSniper();
 		for (FakeAuctionServer auction : auctions) {
 			final String itemId = auction.getItemId();
-			driver.startBiddingFor(itemId);
-			driver.showSniperStatus(auction.getItemId(), 0, 0, SnipersTableModel.textFor(JOINING));
+			driver.startBiddingFor(itemId, Integer.MAX_VALUE);
+			driver.showSniperStatus(auction.getItemId(), 0, 0, textFor(JOINING));
 		}
+	}
+
+	public void startBiddingWithStopPrice(FakeAuctionServer auction, int stopPrice) {
+		startSniper();
+		final String itemId = auction.getItemId();
+		driver.startBiddingFor(itemId, stopPrice);
+		driver.showSniperStatus(auction.getItemId(), 0, 0, textFor(JOINING));
 	}
 
 	private void startSniper() {
@@ -58,15 +65,23 @@ public class ApplicationRunner {
 		driver.showSniperStatus(Main.STATUS_LOST);
 	}
 
-	public void hasShownSniperIsBiding(FakeAuctionServer auction, int lastPrice, int lastBid) throws InterruptedException {
-		driver.showSniperStatus(auction.getItemId(), lastPrice, lastBid, Main.STATUS_BIDDING);
+	public void showsSniperHasLostAuction(FakeAuctionServer auction, int lastPrice, int lastBid) {
+		driver.showSniperStatus(auction.getItemId(), lastPrice, lastBid, textFor(SniperState.LOST));
 	}
 
 	public void showsSniperHasWonAuction(FakeAuctionServer auction, int lastPrice) {
-		driver.showSniperStatus(auction.getItemId(), lastPrice, lastPrice, Main.STATUS_WON);		
+		driver.showSniperStatus(auction.getItemId(), lastPrice, lastPrice, textFor(SniperState.WON));		
+	}
+
+	public void hasShownSniperIsBiding(FakeAuctionServer auction, int lastPrice, int lastBid) throws InterruptedException {
+		driver.showSniperStatus(auction.getItemId(), lastPrice, lastBid, textFor(SniperState.BIDDING));
+	}
+
+	public void hasShownSniperIsLosing(FakeAuctionServer auction, int lastPrice, int lastBid) {
+		driver.showSniperStatus(auction.getItemId(), lastPrice, lastBid, textFor(SniperState.LOSING));
 	}
 
 	public void hasShownSniperIsWinning(FakeAuctionServer auction, int winningBid) {
-		driver.showSniperStatus(auction.getItemId(), winningBid, winningBid, Main.STATUS_WINNING);		
+		driver.showSniperStatus(auction.getItemId(), winningBid, winningBid, textFor(SniperState.WINNING));		
 	}
 }

@@ -1,11 +1,16 @@
 package test.auctionsniper;
+import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
+import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
+import static org.hamcrest.Matchers.equalTo;
+
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.table.JTableHeader;
 
 import org.hamcrest.Matcher;
-import static org.hamcrest.Matchers.equalTo;
+
 import auctionsniper.Main;
+import auctionsniper.SniperState;
 import auctionsniper.ui.MainWindow;
 
 import com.objogate.wl.swing.AWTEventQueueProber;
@@ -14,9 +19,6 @@ import com.objogate.wl.swing.driver.JFrameDriver;
 import com.objogate.wl.swing.driver.JTableDriver;
 import com.objogate.wl.swing.driver.JTableHeaderDriver;
 import com.objogate.wl.swing.driver.JTextFieldDriver;
-
-import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
-import static com.objogate.wl.swing.matcher.IterableComponentsMatcher.matching;
 import com.objogate.wl.swing.gesture.GesturePerformer;
 
 public class AuctionSniperDriver extends JFrameDriver{
@@ -29,7 +31,7 @@ public class AuctionSniperDriver extends JFrameDriver{
 						new AWTEventQueueProber(timeoutMillis, 100));
 	}
 	
-	public void showSniperStatus(String itemId, int lastPrice, int lastBid, String statusText){
+	public void showSniperStatus(String itemId, int lastPrice, int lastBid, String status){
 		JTableDriver table = new JTableDriver(this);
 		
 		table.hasRow(
@@ -37,7 +39,7 @@ public class AuctionSniperDriver extends JFrameDriver{
 				withLabelText(itemId)
 				,withLabelText(String.valueOf(lastPrice)) 
 				,withLabelText(String.valueOf(lastBid))
-				,withLabelText(statusText)
+				,withLabelText(status)
 			)			
 		);
 	}
@@ -52,16 +54,21 @@ public class AuctionSniperDriver extends JFrameDriver{
 				withLabelText("Last Bid"), withLabelText("State")));
 	}
 
-	@SuppressWarnings("unchecked")
 	public void startBiddingFor(String itemId) {
-		itemIdField().replaceAllText(itemId);
+		textField(MainWindow.NEW_ITEM_ID_NAME).replaceAllText(itemId);
 		bidButton().click();
 	}	
+
+	public void startBiddingFor(String itemId, int stopPrice) {
+		textField(MainWindow.NEW_ITEM_ID_NAME).replaceAllText(itemId);
+		textField(MainWindow.NEW_ITEM_STOP_PRICE_NAME).replaceAllText(String.valueOf(stopPrice));
+		bidButton().click();
+	}
 	
-	private JTextFieldDriver itemIdField() {
-		JTextFieldDriver newItemId = new JTextFieldDriver(this, JTextField.class, named(MainWindow.NEW_ITEM_ID_NAME));
-		newItemId.focusWithMouse();
-		return newItemId;
+	private JTextFieldDriver textField(String newItemIdName) {
+		JTextFieldDriver textField = new JTextFieldDriver(this, JTextField.class, named(newItemIdName));
+		textField.focusWithMouse();
+		return textField;
 	}
 	
 	private JButtonDriver bidButton() {

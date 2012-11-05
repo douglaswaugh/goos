@@ -12,6 +12,7 @@ import auctionsniper.AuctionHouse;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperCollector;
 import auctionsniper.SniperLauncher;
+import auctionsniper.ui.Item;
 import static org.hamcrest.Matchers.equalTo;
 
 public class SniperLauncherTest {
@@ -27,6 +28,7 @@ public class SniperLauncherTest {
 	public void addsNewSniperToCollectorAndThenJoinsAuction()
 	{
 		final String itemId = "item 123";
+		final Item item = new Item(itemId, 876);
 		context.checking(new Expectations() {{
 			allowing(auctionHouse).auctionFor(itemId);
 				will(returnValue(auction));
@@ -39,7 +41,7 @@ public class SniperLauncherTest {
 		}});
 		
 		SniperLauncher launcher = new SniperLauncher(auctionHouse, sniperCollector); 
-		launcher.joinAuction(itemId);
+		launcher.joinAuction(item);
 	}
 	
 	protected Matcher<AuctionSniper>sniperForItem(String itemId) {

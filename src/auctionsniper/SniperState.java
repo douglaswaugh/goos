@@ -3,16 +3,18 @@ package auctionsniper;
 import com.objogate.exception.Defect;
 
 public enum SniperState {
-	JOINING{
+	JOINING {
 		@Override public SniperState whenAuctionClosed() { return LOST; }
 	}, 
-	BIDDING{
+	BIDDING {
 		@Override public SniperState whenAuctionClosed() { return LOST; }
 	}, 
-	WINNING
-	{
+	WINNING	{
 		@Override public SniperState whenAuctionClosed() { return WON; }
 	}, 
+	LOSING {
+		@Override public SniperState whenAuctionClosed() { return LOST; }
+	},
 	LOST, 
 	WON;
 	

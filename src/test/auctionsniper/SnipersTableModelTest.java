@@ -21,6 +21,7 @@ import auctionsniper.AuctionSniper;
 import auctionsniper.SniperPortfolio;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.ui.Column;
+import auctionsniper.ui.Item;
 import auctionsniper.ui.SnipersTableModel;
 
 import com.objogate.exception.Defect;
@@ -43,7 +44,7 @@ public class SnipersTableModelTest {
 	
 	@Test
 	public void setsSniperValuesInColumns(){
-		AuctionSniper joining = new AuctionSniper("item id", null);
+		AuctionSniper joining = new AuctionSniper(new Item("item id", Integer.MAX_VALUE), null);
 		SniperSnapshot bidding = joining.getSnapshot().bidding(555, 666);
 		context.checking(new Expectations(){{
 			allowing(listener).tableChanged(with(anyInsertionEvent()));
@@ -65,7 +66,7 @@ public class SnipersTableModelTest {
 	
 	@Test
 	public void notifiesListenersWhenAddingASniper() {
-		AuctionSniper joining = new AuctionSniper("item123", null);
+		AuctionSniper joining = new AuctionSniper(new Item("item123", Integer.MAX_VALUE), null);
 		context.checking(new Expectations() { {
 			oneOf(listener).tableChanged(with(anInsertionAtRow(0)));
 		}});	
@@ -80,8 +81,8 @@ public class SnipersTableModelTest {
 	
 	@Test
 	public void holdsSniperInAdditionOrder() {
-		AuctionSniper joining = new AuctionSniper("item 0", null);
-		AuctionSniper joining2 = new AuctionSniper("item 1", null);
+		AuctionSniper joining = new AuctionSniper(new Item("item 0", Integer.MAX_VALUE), null);
+		AuctionSniper joining2 = new AuctionSniper(new Item("item 1", Integer.MAX_VALUE), null);
 		context.checking(new Expectations() {{
 			ignoring(listener);
 		}});
@@ -95,8 +96,8 @@ public class SnipersTableModelTest {
 	
 	@Test
 	public void updatesCorrectRowForSniper() {	
-		AuctionSniper joining = new AuctionSniper("item 0", null);
-		AuctionSniper joining2 = new AuctionSniper("item 1", null);
+		AuctionSniper joining = new AuctionSniper(new Item("item 0", Integer.MAX_VALUE), null);
+		AuctionSniper joining2 = new AuctionSniper(new Item("item 1", Integer.MAX_VALUE), null);
 		context.checking(new Expectations(){{
 			ignoring(listener);
 		}});
@@ -111,8 +112,8 @@ public class SnipersTableModelTest {
 	
 	@Test (expected=Defect.class)
 	public void throwsDefectIfNoExistingSniperForAnUpdate() {
-		AuctionSniper joining = new AuctionSniper("item 0", null);
-		AuctionSniper joining2 = new AuctionSniper("item 1", null);
+		AuctionSniper joining = new AuctionSniper(new Item("item 0", Integer.MAX_VALUE), null);
+		AuctionSniper joining2 = new AuctionSniper(new Item("item 1", Integer.MAX_VALUE), null);
 		context.checking(new Expectations() {{
 			ignoring(listener);
 		}});
