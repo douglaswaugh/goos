@@ -21,7 +21,15 @@ public class AuctionMessageTranslator implements MessageListener {
 
 	@Override
 	public void processMessage(Chat chat, Message message) {
-		AuctionEvent event = AuctionEvent.from(message);		
+		try{
+			translate(message.getBody());	
+		} catch (Exception parseException) {
+			listener.auctionFailed();
+		}		
+	}
+
+	private void translate(String body) throws MissingValueException {
+		AuctionEvent event = AuctionEvent.from(body);		
 
 		String type = event.type();		
 		if ("CLOSE".equals(type)){
@@ -34,51 +42,55 @@ public class AuctionMessageTranslator implements MessageListener {
 	}
 	
 	private static class AuctionEvent {
-		private static final HashMap<String, String> fields = new HashMap<String, String>();
+		private final HashMap<String, String> values = new HashMap<String, String>();
 		
-		public String type() {
+		public String type() throws MissingValueException {
 			return get("Event");
 		}
 		
-		public PriceSource isFrom(String sniperId) {
+		public PriceSource isFrom(String sniperId) throws MissingValueException {
 			return sniperId.equals(bidder()) ? PriceSource.FromSniper : PriceSource.FromOtherBidder;
 		}
 
-		private String bidder() {
+		private String bidder() throws MissingValueException {
 			return get("Bidder");
 		}
 
-		public int currentPrice() {
+		public int currentPrice() throws NumberFormatException, MissingValueException {
 			return getInt("CurrentPrice");
 		}
 		
-		public int increment() {
+		public int increment() throws NumberFormatException, MissingValueException {
 			return getInt("Increment");
 		}		
 		
-		static AuctionEvent from(Message message) {
+		static AuctionEvent from(String body) {
 			AuctionEvent event = new AuctionEvent();
-			for (String element : fieldsIn(message)){
-				addField(element);
+			for (String element : fieldsIn(body)){
+				event.addField(element);
 			}
 			return event;
 		}
 
-		private static String[] fieldsIn(Message message) {
-			return message.getBody().split(";");
+		private static String[] fieldsIn(String body) {
+			return body.split(";");
 		}
 
-		private static void addField(String element) {
+		private void addField(String element) {
 			String[] pair = element.split(":");
-			fields.put(pair[0].trim(), pair[1].trim());
+			values.put(pair[0].trim(), pair[1].trim());
 		}
 
-		private int getInt(String fieldName) {
+		private int getInt(String fieldName) throws NumberFormatException, MissingValueException {
 			return Integer.parseInt(get(fieldName));
 		}
 
-		private String get(String fieldName) {
-			return fields.get(fieldName);
+		private String get(String name) throws MissingValueException {
+			String value = values.get(name);
+			if (null == value) {
+				throw new MissingValueException(name);
+			}
+			return value;			
 		}
 	}
 }

@@ -17,7 +17,7 @@ import auctionsniper.SniperState;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
 	private List<SniperSnapshot> snapshots = new ArrayList<SniperSnapshot>();
-	private static String[] STATUS_TEXT = { "Joining", "Bidding", "Winning", "Losing", "Lost", "Won" };
+	private static String[] STATUS_TEXT = { "Joining", "Bidding", "Winning", "Losing", "Lost", "Won", "Failed" };
 		
 	public int getColumnCount() { return Column.values().length; }
 	

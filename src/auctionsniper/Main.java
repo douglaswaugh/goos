@@ -21,7 +21,8 @@ public class Main {
 	public static final String STATUS_WON = "Won";
 	public static final String STATUS_WINNING = "Winning";
 	public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
-	public static final String STATUS_LOSING = "Losing";	
+	public static final String STATUS_LOSING = "Losing";
+	public static final String STATUS_FAILED = "Failed";	
 	public Main() throws Exception {
 		startUserInterface();
 	}

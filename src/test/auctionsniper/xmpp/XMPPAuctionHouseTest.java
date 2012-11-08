@@ -60,7 +60,7 @@ public class XMPPAuctionHouseTest {
 		auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed));
 		
 		auction.join();
-		auctionServer.hasReceivedJoinRequestFromSniper(ApplicationRunner.SNIPER_XMPP_ID);
+		auctionServer.hasReceivedJoinRequestFrom(ApplicationRunner.SNIPER_XMPP_ID);
 		auctionServer.announceClosed();
 		
 		assertTrue("should have been closed", auctionWasClosed.await(2, TimeUnit.SECONDS));
@@ -73,6 +73,9 @@ public class XMPPAuctionHouseTest {
 			}
 			public void currentPrice(int price, int increment, PriceSource priceSource) {
 				// not implemented
+			}
+			public void auctionFailed() {
+				// TODO Auto-generated method stub
 			}
 		};
 	}

@@ -53,7 +53,7 @@ public class FakeAuctionServer {
 				price, increment, bidder));
 	}
 
-	public void hasReceivedJoinRequestFromSniper(String sniperId) throws InterruptedException {
+	public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {
 		receivesAMessageMatching(sniperId, equalTo(XMPPAuction.JOIN_COMMAND_FORMAT));
 	}
 
@@ -74,5 +74,9 @@ public class FakeAuctionServer {
 			throws InterruptedException {
 		messageListener.receivesAMessage(matcher);
 		assertThat(currentChat.getParticipant(), equalTo(sniperId));
+	}
+
+	public void sendInvalidMessageContaining(String brokenMessage) throws XMPPException {
+		currentChat.sendMessage(brokenMessage);
 	}
 }
