@@ -37,6 +37,10 @@ public class SniperSnapshot {
 		return this.itemId == other.itemId;
 	}
 
+	public SniperSnapshot failed() {
+		return new SniperSnapshot(itemId, 0, 0, SniperState.FAILED);
+	}
+
 	@Override
 	public String toString() {
 		return "SniperSnapshot [itemId=" + itemId + ", lastPrice=" + lastPrice

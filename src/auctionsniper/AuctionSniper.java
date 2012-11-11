@@ -6,9 +6,9 @@ public class AuctionSniper implements AuctionEventListener{
 
 	private SniperListener sniperListener;
 	private Auction auction;
-	private Boolean isWinning = false;
 	private SniperSnapshot snapshot;
-	private Item item;
+	private Item item;	
+	private final Announcer<SniperListener> listeners = Announcer.to(SniperListener.class);
 
 	public AuctionSniper(Item item, Auction auction) {
 		this.auction = auction;
@@ -21,7 +21,7 @@ public class AuctionSniper implements AuctionEventListener{
 	}
 	
 	public void addSniperListener(SniperListener sniperListener) {
-		this.sniperListener = sniperListener;
+		this.listeners.addListener(sniperListener);
 	}
 	
 	public void auctionClosed() {
@@ -49,10 +49,11 @@ public class AuctionSniper implements AuctionEventListener{
 	}
 	
 	public void auctionFailed() {
-		
+		snapshot = snapshot.failed();
+		notifyChange();
 	}
 	
 	private void notifyChange(){
-		sniperListener.sniperStateChanged(snapshot);
+		listeners.announce().sniperStateChanged(snapshot);
 	}
 }
